@@ -6,11 +6,11 @@ python (email) messaging package
 
 At QWAN we're building some applications in python. We collect usefull stuff in quiltz packages:
 
-* **quiltz_domain**
+* **quiltz-domain**
   contains domain level modules like, entity id's, results, an email anonymizer, validators and parsers
-* **quiltz_testsupport**
+* **quiltz-testsupport**
   contains test support modules, that supports mainly non unit tests, like integrating with smtp,  probing asynchronous results and asserting log statements
-* **quilts_messaging**
+* **quiltz-messaging**
   contains a messaging domain concept and an engine(s) to send the messages. Currently only smtp sending is supported.
 
 ## modules in this package
@@ -20,17 +20,25 @@ The 2 modules in this package work together, but _can_ be used separately as wel
 <!--
 
 @startuml messaging-component
-
-class engine.smtp.SMTPBasedMessageEngine
-class engine.smtp.NoMessageEngine
-class engine.smtp.SMTPBasedMessageEngineForTest
-class messenger.Messenger
-class messenger.Message
-engine.smtp.SMTPBasedMessageEngine -down[hidden]-> engine.smtp.SMTPBasedMessageEngineForTest
-engine.smtp.SMTPBasedMessageEngineForTest -right[hidden]-> engine.smtp.NoMessageEngine
-engine.smtp.SMTPBasedMessageEngine -right-> messenger.Messenger
-messenger.Messenger o-right-> messenger.Message	
-
+skinparam {
+  handwritten true
+  monochrome true
+}
+package quiltz {
+  package messenger {
+    class Messenger
+    class Message
+  }
+  package engine.smtp {        
+    class SMTPBasedMessageEngine
+    class NoMessageEngine
+    class SMTPBasedMessageEngineForTest
+  }
+}
+SMTPBasedMessageEngine -down[hidden]-> SMTPBasedMessageEngineForTest
+SMTPBasedMessageEngineForTest -right[hidden]-> NoMessageEngine
+SMTPBasedMessageEngine -right-> Messenger
+Messenger o-right-> Message
 @enduml
 
 -->
