@@ -26,18 +26,30 @@ skinparam {
 }
 package quiltz {
   package messenger {
-    class Messenger
-    class Message
+    class Messenger {
+      messages
+      send(message)
+    }
+    class Message {
+      static for_unnamed_recepient()
+      static for_named_recepient()
+    }
   }
   package engine.smtp {        
-    class SMTPBasedMessageEngine
-    class NoMessageEngine
-    class SMTPBasedMessageEngineForTest
+    class SMTPBasedMessageEngine {
+      commit(messenger)
+    }
+    class NoMessageEngine {
+      commit(messenger)
+    }
+    class SMTPBasedMessageEngineForTest {
+      commit(messenger)
+    }
   }
 }
 SMTPBasedMessageEngine -down[hidden]-> SMTPBasedMessageEngineForTest
 SMTPBasedMessageEngineForTest -right[hidden]-> NoMessageEngine
-SMTPBasedMessageEngine -right-> Messenger
+SMTPBasedMessageEngine .right.> Messenger
 Messenger o-right-> Message
 @enduml
 
@@ -57,15 +69,30 @@ In your domain code, send messages like this:
 from quiltz.messaging import Message, Messenger
 
 def send_a_message_from_somewhere():
-    message = Message.for_named_recipient(
-        to='some@email.org', 
+    messenger = Messenger('sender@mail.org', None)
+    message = Message.for_unnamed_recipient(
+        to='recepient@email.org', 
         subject="Hi Facilitator", 
         body='My message')
-          self.messenger.send(aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message'))
-
-
-...
+    messenger.send(message)
 ```
+
+### SMTPBasedMessageEngine
+
+Then, anywhere else in the code you can commit all created messages
+
+```python
+from quiltz.engine.smtp import SMTPBasedMessageEngine
+
+def commit_sending_messages():
+    engine = SMTPBasedMessageEngine(
+        host='somehost', 
+        port=9992, 
+        user='someuser', 
+        password='s3cr3t')
+    engine.commit(messenger) # really sends all messages 
+```
+
 ## installing 
 
 ```bash
