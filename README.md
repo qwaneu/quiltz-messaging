@@ -39,13 +39,21 @@ messenger.Messenger o-right-> messenger.Message
 * **SMTPBasedMessageEngine** is an smtp adapter that sends the messages in messenger on `commit`
 * **SMTPBasedMessageEngineFor** is an smtp adapter useful for test that ommits tls connections and works fine with the SMTPServer from [quiltz-testsupport](https://github.com/qwaneu/quiltz-testsupport)
 
-
 ### messenger
 
 In your domain code, send messages like this:
 
-```
-from quiltz.messaging import 
+```python
+from quiltz.messaging import Message, Messenger
+
+def send_a_message_from_somewhere():
+    message = Message.for_named_recipient(
+        to='some@email.org', 
+        subject="Hi Facilitator", 
+        body='My message')
+          self.messenger.send(aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message'))
+
+
 ...
 ```
 ## installing 
