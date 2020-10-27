@@ -20,6 +20,7 @@ The 2 modules in this package work together, but _can_ be used separately as wel
 <div hidden>
 ```
 @startuml messaging-component
+
 class engine.smtp.SMTPBasedMessageEngine
 class engine.smtp.NoMessageEngine
 class engine.smtp.SMTPBasedMessageEngineForTest
@@ -29,6 +30,7 @@ engine.smtp.SMTPBasedMessageEngine -down[hidden]-> engine.smtp.SMTPBasedMessageE
 engine.smtp.SMTPBasedMessageEngineForTest -right[hidden]-> engine.smtp.NoMessageEngine
 engine.smtp.SMTPBasedMessageEngine -right-> messenger.Messenger
 messenger.Messenger o-right-> messenger.Message	
+
 @enduml
 ```
 </div>
