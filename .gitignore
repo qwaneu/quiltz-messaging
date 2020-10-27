@@ -1,0 +1,11 @@
+# Compiled Python bytecode
+*.py[cod]
+*.log
+*.pdf
+*.png
+build/
+dist/
+src/**/*.egg-info/
+reports/
+venv/**/*
+tests/data/**/*
