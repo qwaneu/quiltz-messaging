@@ -10,7 +10,7 @@ with open("requirements/prod.txt", "r") as fh:
   requires = fh.readlines()
 
 setup(
-  name='quiltz_messaging',  
+  name='quiltz-messaging',  
   version=version,
   author="Rob Westgeest",
   author_email="rob@qwan.eu",
@@ -18,8 +18,8 @@ setup(
   long_description=long_description,
   long_description_content_type="text/markdown",
   url="https://github.com/qwaneu/quiltz-messaging",
+  package_dir={'':'src'},
   packages=find_packages(where='src'),
-  include_package_data=True,
   install_requires=requires,
   classifiers=[
       "Programming Language :: Python :: 3",
