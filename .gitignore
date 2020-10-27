@@ -2,7 +2,6 @@
 *.py[cod]
 *.log
 *.pdf
-*.png
 build/
 dist/
 src/**/*.egg-info/
