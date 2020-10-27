@@ -18,7 +18,9 @@ At QWAN we're building some applications in python. We collect usefull stuff in 
 The 2 modules in this package work together, but _can_ be used separately as well. 
 
 <div hidden>
+
 ```
+
 @startuml messaging-component
 
 class engine.smtp.SMTPBasedMessageEngine
@@ -32,7 +34,9 @@ engine.smtp.SMTPBasedMessageEngine -right-> messenger.Messenger
 messenger.Messenger o-right-> messenger.Message	
 
 @enduml
+
 ```
+
 </div>
 
 ![messaging-component](doc/images/messaging-component.png)
