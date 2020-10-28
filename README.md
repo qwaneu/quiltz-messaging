@@ -27,7 +27,7 @@ The 2 modules in this package work together, but _can_ be used separately as wel
 
 See [design considerations](doc/design-considerations.md)
 
-<div style="display:none">
+<!--
 @startuml messaging-component
 skinparam {
   handwritten true
@@ -62,7 +62,7 @@ SMTPBasedMessageEngine .right.> Messenger
 Messenger o-right-> Message
 @enduml
 
-</div>
+-->
 
 ![messaging-component](doc/images/messaging-component.png)
 
