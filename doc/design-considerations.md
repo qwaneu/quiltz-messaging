@@ -56,7 +56,11 @@ end box
 -->
 ![messaging-component](images/domain-messenger-interaction.png)
 
-Also we'd like all integrations with the outside world to be in a controlled place; an adapter. Therefore we decided to separate the creating and collecting the messages from actually sending it, coordinated by the command.
+This makes 'sending' messages in the domain object(s) easy to test and focused on what messages, with what content are sent in what situation. Testing all of this logic integrated with some external (SMTP?) server would be a pain.
+
+### Integrating with SMTP
+
+We'd like all integrations with the outside world to be in a controlled place; an adapter. Adapter integration tests would test that interaction regardless of the exact content of messages. Therefore we decided to separate the creating and collecting the messages from actually sending it, coordinated by the command.
 
 <!--
 @startuml command-execution-with-message
