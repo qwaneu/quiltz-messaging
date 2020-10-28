@@ -93,7 +93,9 @@ messageengine -> smtpserver: send message
 
 ![messaging-component](images/command-execution-with-message.png)
 
-a complete interaction with a some repository and mesaging could look like:
+### Integrating it with the command repository approach
+
+From the perspective of a coordinating command, a complete sequenc of events from getting a domain object to saving the result and sending potential messages could look like:
 
 <!--
 @startuml command-execution-with-repo-and-message
