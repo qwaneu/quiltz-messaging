@@ -33,27 +33,25 @@ skinparam {
   handwritten true
   monochrome true
 }
-package quiltz {
-  package messenger {
-    class Messenger {
-      messages
-      send(message)
-    }
-    class Message {
-      static for_unnamed_recepient()
-      static for_named_recepient()
-    }
+package quiltz.messenger {
+  class Messenger {
+    messages
+    send(message)
   }
-  package engine.smtp {        
-    class SMTPBasedMessageEngine {
-      commit(messenger)
-    }
-    class NoMessageEngine {
-      commit(messenger)
-    }
-    class SMTPBasedMessageEngineForTest {
-      commit(messenger)
-    }
+  class Message {
+    static for_unnamed_recepient()
+    static for_named_recepient()
+  }
+}
+package quiltz.engine.smtp {        
+  class SMTPBasedMessageEngine {
+    commit(messenger)
+  }
+  class NoMessageEngine {
+    commit(messenger)
+  }
+  class SMTPBasedMessageEngineForTest {
+    commit(messenger)
   }
 }
 SMTPBasedMessageEngine -down[hidden]-> SMTPBasedMessageEngineForTest
@@ -64,7 +62,7 @@ Messenger o-right-> Message
 
 -->
 
-![messaging-component](doc/images/messaging-component.png)
+![messaging-component](doc/images/messaging-component.svg)
 
 * **Messenger** is a domain level concept that collects messages
 * **SMTPBasedMessageEngine** is an smtp adapter that sends the messages in messenger on `commit`

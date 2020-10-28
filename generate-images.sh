@@ -1,3 +1,5 @@
 #!/bin/bash
-plantuml README.md
-mv *.png doc/images/
+plantuml -tsvg README.md
+mv *.svg doc/images/
+plantuml -tsvg doc/*.md
+mv doc/*.svg doc/images

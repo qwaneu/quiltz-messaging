@@ -33,7 +33,7 @@ command -> domainobject: do the business
 command -> repository: save(domainobject)
 @enduml
 -->
-![messaging-component](images/command-execution.png)
+![messaging-component](images/command-execution.svg)
 
 
 ### Sending messages
@@ -54,7 +54,7 @@ domainobject -> messenger: send some message
 end box
 @enduml
 -->
-![messaging-component](images/domain-messenger-interaction.png)
+![messaging-component](images/domain-messenger-interaction.svg)
 
 This makes 'sending' messages in the domain object(s) easy to test and focused on what messages, with what content are sent in what situation. Testing all of this logic integrated with some external (SMTP?) server would be a pain.
 
@@ -91,7 +91,7 @@ messageengine -> smtpserver: send message
 @enduml
 -->
 
-![messaging-component](images/command-execution-with-message.png)
+![messaging-component](images/command-execution-with-message.svg)
 
 ### Integrating it with the command repository approach
 
@@ -123,6 +123,6 @@ command -> repository: save(domainobject)
 command -> messageengine: commit(messenger)
 @enduml
 -->
-![messaging-component](images/command-execution-with-repo-and-message.png)
+![messaging-component](images/command-execution-with-repo-and-message.svg)
 
 [back to readme](https://github.com/qwaneu/quiltz-messaging)
