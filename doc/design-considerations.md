@@ -24,7 +24,7 @@ participant repository order 30
 end box
 command -> repository: byId(12123)
 note right
-get domain object dat from some storage
+get domain object data from some storage
 and map it to a domain object
 end note
 create domainobject
