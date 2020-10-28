@@ -25,7 +25,7 @@ pip install quitlz-messaging
 
 The 2 modules in this package work together, but _can_ be used separately as well. 
 
-See [design considerations](doc/design-considerations)
+See [design considerations](doc/design-considerations.md)
 
 <!--
 @startuml messaging-component

@@ -33,7 +33,7 @@ command -> domainobject: do the business
 command -> repository: save(domainobject)
 @enduml
 -->
-![messaging-component](doc/images/command-execution.png)
+![messaging-component](images/command-execution.png)
 
 
 ### Sending messages
@@ -54,7 +54,7 @@ domainobject -> messenger: send some message
 end box
 @enduml
 -->
-![messaging-component](doc/images/domain-messenger-interaction.png)
+![messaging-component](images/domain-messenger-interaction.png)
 
 Also we'd like all integrations with the outside world to be in a controlled place; an adapter. Therefore we decided to separate the creating and collecting the messages from actually sending it, coordinated by the command.
 
@@ -87,7 +87,7 @@ messageengine -> smtpserver: send message
 @enduml
 -->
 
-![messaging-component](doc/images/command-execution-with-message.png)
+![messaging-component](images/command-execution-with-message.png)
 
 a complete interaction with a some repository and mesaging could look like:
 
@@ -117,5 +117,5 @@ command -> repository: save(domainobject)
 command -> messageengine: commit(messenger)
 @enduml
 -->
-![messaging-component](doc/images/command-execution-with-repo-and-message.png)
+![messaging-component](images/command-execution-with-repo-and-message.png)
 
