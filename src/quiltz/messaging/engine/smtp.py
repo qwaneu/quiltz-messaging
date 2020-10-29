@@ -1,7 +1,7 @@
 from smtplib import SMTP
 from email.message import EmailMessage
-from quiltz.results import Success, Failure
-from quiltz.anonymizer import anonymize
+from quiltz.domain.results import Success, Failure
+from quiltz.domain.anonymizer import anonymize
 from textwrap import dedent
 import ssl
 import logging

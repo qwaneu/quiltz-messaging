@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from quiltz.testsupport import probe_that, log_collector
 from quiltz.messaging.engine.smtp import SMTPBasedMessageEngine, as_smtp_message
 from quiltz.messaging.messenger import Message, Messenger
-from quiltz.results import Success, Failure
-from quiltz.anonymizer import anonymize
+from quiltz.domain.results import Success, Failure
+from quiltz.domain.anonymizer import anonymize
 
 class TestSMTPBasedMessageEngine:
     @pytest.fixture(autouse=True)
