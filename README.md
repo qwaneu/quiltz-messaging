@@ -21,4 +21,4 @@ quiltz packages:
 pip install quitlz-messaging
 ```
 
-see [documentatio](doc/index.md)
+see [documentation](doc/index.md)
