@@ -36,14 +36,14 @@ class SMTPBasedMessageEngine:
             with SMTP(self.host, self.port) as smtp:
                 smtp.starttls(context=self.create_ssl_context())
                 self.login(smtp)
-                return self.send(smtp, messenger)
+                return self.send(smtp, messenger.messages)
         except ConnectionError as e:
             return Failure(message=str(e))
 
-    def send(self, smtp, messenger):
+    def send(self, smtp, messages):
         failed_messages = []
         successful_messages = []
-        for message in messenger.messages:
+        for message in messages:
             try:
                 smtp.send_message(msg=as_smtp_message(message))
                 successful_messages.append(message)
