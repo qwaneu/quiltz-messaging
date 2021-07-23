@@ -1,7 +1,6 @@
 from smtplib import SMTP, SMTPDataError
 from email.message import EmailMessage
 from quiltz.domain.results import Success, Failure
-from quiltz.domain.anonymizer import anonymize
 import ssl
 import logging
 
@@ -37,26 +36,31 @@ class SMTPBasedMessageEngine:
             with SMTP(self.host, self.port) as smtp:
                 smtp.starttls(context=self.create_ssl_context())
                 self.login(smtp)
-                failed_messages = []
-                for message in messenger.messages:
-                    try:
-                        smtp.send_message(msg=as_smtp_message(message))
-                    except SMTPDataError as e:
-                        self.logger.warning('Failed sending message to {}: [{}] {}'.format(anonymize(message.to.email),
-                                                                                           e.smtp_code,
-                                                                                           e.smtp_error.decode('utf-8')))
-                        failed_messages.append(message)
-                successful_messages = [m for m in messenger.messages if m not in failed_messages]
-                self.logger.info(
-                    'Flushed messages to {}'.format(", ".join([anonymize(m.to.email) for m in successful_messages])))
-                if len(failed_messages) != 0:
-                    message = 'Sending messages failed for: {}'.format(', '.join([m.recipient for m in failed_messages]))
-                    if len(successful_messages) != 0:
-                        message += ' and succeeded for: {}'.format(', '.join([m.recipient for m in successful_messages]))
-                    return Failure(message=message)
+                return self.send(smtp, messenger)
         except ConnectionError as e:
             return Failure(message=str(e))
-        return Success()
+
+    def send(self, smtp, messenger):
+        failed_messages = []
+        successful_messages = []
+        for message in messenger.messages:
+            try:
+                smtp.send_message(msg=as_smtp_message(message))
+                successful_messages.append(message)
+            except SMTPDataError as e:
+                self.logger.warning('Failed sending message to {}: [{}] {}'.format(message.to.anonymized,
+                                                                                   e.smtp_code,
+                                                                                   e.smtp_error.decode('utf-8')))
+                failed_messages.append(message)
+        self.logger.info('Flushed messages to {}'.format(", ".join([m.to.anonymized for m in successful_messages])))
+        return self.to_result(successful_messages, failed_messages)
+
+    def to_result(self, successful_messages, failed_messages):
+        if len(failed_messages) == 0: return Success()
+        message = 'Sending messages failed for: {}'.format(', '.join([m.recipient for m in failed_messages]))
+        if len(successful_messages) != 0:
+            message += ' and succeeded for: {}'.format(', '.join([m.recipient for m in successful_messages]))
+        return Failure(message=message)
 
 
 class SMTPBasedMessageEngineForTest(SMTPBasedMessageEngine):
