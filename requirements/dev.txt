@@ -2,4 +2,4 @@
 pyhamcrest==2.0.2
 pytest==6.1.1
 pytest_watch==4.2.0
-quiltz.testsupport==0.1.0
+quiltz.testsupport==0.2.1

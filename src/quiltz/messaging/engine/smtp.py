@@ -1,4 +1,4 @@
-from smtplib import SMTP
+from smtplib import SMTP, SMTPDataError
 from email.message import EmailMessage
 from quiltz.domain.results import Success, Failure
 from quiltz.domain.anonymizer import anonymize
@@ -34,11 +34,21 @@ class SMTPBasedMessageEngine:
     def commit(self, messenger):
         try:
             with SMTP(self.host, self.port) as smtp:
+                failed_emails = []
                 smtp.starttls(context=self.create_ssl_context())
                 self.login(smtp)
                 for message in messenger.messages:
-                    smtp.send_message(msg=as_smtp_message(message))
+                    try:
+                        smtp.send_message(msg=as_smtp_message(message))
+                    except SMTPDataError as error:
+                        failed_emails.append(message.recipient)
                 self.logger.info("Flushed messages to {}".format(", ".join([ anonymize(m.to.email) for m in messenger.messages ])))
+                if len(failed_emails) != 0: 
+                    message = 'Sending messages failed for: {}'.format(', '.join(failed_emails))
+                    successful_emails = [m.recipient for m in messenger.messages if m.recipient not in failed_emails]
+                    if len(successful_emails) != 0:
+                        message += ' and succeeded for: {}'.format(', '.join(successful_emails))
+                    return Failure(message=message)
         except ConnectionError as e:
             return Failure(message=str(e))
         return Success()

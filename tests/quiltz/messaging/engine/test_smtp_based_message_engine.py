@@ -1,3 +1,4 @@
+from re import I
 from testing import *
 from quiltz.testsupport.smtp import StubSmtpServer
 import logging 
@@ -49,7 +50,24 @@ class TestSMTPBasedMessageEngine:
         self.message_engine.commit(self.messenger)
         log_collector.assert_info('Flushed messages to {}, {}'.format(anonymize("rob@mail.com"), anonymize("marc@mail.com")))
 
-class TestSMTPBasedMessageEngineThatFails:
+    def test_returns_failure_when_message_fails_to_send(self):
+        self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace', '554 Transaction failed: Local address contains control or whitespace')
+        message = aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message')
+        self.messenger.send(message)
+        self.messenger.send(message)
+        assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {}, {}'.format(message.recipient, message.recipient))))
+
+    def test_returns_failure_when_only_one_message_fails_to_send(self):
+        self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace')
+        message1 = aValidMessage(to=ValidRecepient(email="failure@facilitators.com"), subject="Hi Facilitator", body='My message')
+        message2 = aValidMessage(to=ValidRecepient(email="success@facilitators.com"), subject="Hi Facilitator", body='My message')
+        self.messenger.send(message1)
+        self.messenger.send(message2)
+        self.messenger.send(message2)
+        assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {} and succeeded for: {}, {}'.format(message1.recipient, message2.recipient, message2.recipient))))
+
+
+class TestSMTPBasedMessageEngineThatFailsOnNotBeinAbleToConnectToSMTPServer:
     @pytest.fixture(autouse=True)
     def setup(self):
         logging.getLogger('mail.log').setLevel(logging.WARN)
