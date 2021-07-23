@@ -72,15 +72,6 @@ class TestSMTPBasedMessageEngine:
         self.messenger.send(message2)
         assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {} and succeeded for: {}, {}'.format(message1.recipient, message2.recipient, message2.recipient))))
 
-    def test_logs_failures(self, log_collector):
-        self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace')
-        message1 = aValidMessage(to=ValidRecipient(email="failure@facilitators.com"), subject="Hi Facilitator", body='My message')
-        message2 = aValidMessage(to=ValidRecipient(email="success@facilitators.com"), subject="Hi Facilitator", body='My message')
-        self.messenger.send(message1)
-        self.messenger.send(message2)
-        self.message_engine.commit(self.messenger)
-        log_collector.assert_info('Flushed messages to {}; sending messages failed for {}'.format(anonymize(message2.to.email), anonymize(message1.to.email)))
-
 
 class TestSMTPBasedMessageEngineThatFailsOnNotBeinAbleToConnectToSMTPServer:
     @pytest.fixture(autouse=True)

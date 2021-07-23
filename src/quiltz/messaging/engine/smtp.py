@@ -47,10 +47,8 @@ class SMTPBasedMessageEngine:
                                                                                            e.smtp_error.decode('utf-8')))
                         failed_messages.append(message)
                 successful_messages = [m for m in messenger.messages if m not in failed_messages]
-                log_message = 'Flushed messages to {}'.format(", ".join([anonymize(m.to.email) for m in successful_messages]))
-                if len(failed_messages) != 0:
-                    log_message += '; sending messages failed for {}'.format(", ".join([anonymize(m.to.email) for m in failed_messages]))
-                self.logger.info(log_message)
+                self.logger.info(
+                    'Flushed messages to {}'.format(", ".join([anonymize(m.to.email) for m in successful_messages])))
                 if len(failed_messages) != 0:
                     message = 'Sending messages failed for: {}'.format(', '.join([m.recipient for m in failed_messages]))
                     if len(successful_messages) != 0:
