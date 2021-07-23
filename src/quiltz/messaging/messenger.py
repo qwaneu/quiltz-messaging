@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
+from quiltz.domain.anonymizer import anonymize
 
 
 class Recipient:
@@ -15,6 +16,10 @@ class NamedRecipient(Recipient):
     def email(self):
         return self.person.email
 
+    @property
+    def anonymized(self):
+        return anonymize(self.email)
+
     def as_string(self):
         return "{name} <{email}>".format(name=self.person.name, email=self.person.email)
 
@@ -25,6 +30,10 @@ class UnnamedRecipient(Recipient):
 
     def as_string(self):
         return self.email
+
+    @property
+    def anonymized(self):
+        return anonymize(self.email)
 
 
 @dataclass
