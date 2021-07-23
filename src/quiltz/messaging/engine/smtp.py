@@ -2,13 +2,14 @@ from smtplib import SMTP, SMTPDataError
 from email.message import EmailMessage
 from quiltz.domain.results import Success, Failure
 from quiltz.domain.anonymizer import anonymize
-from textwrap import dedent
 import ssl
 import logging
+
 
 class NoMessageEngine:
     def commit(self, messenger):
         pass
+
 
 class SMTPBasedMessageEngine:
     @staticmethod
@@ -53,8 +54,8 @@ class SMTPBasedMessageEngine:
             return Failure(message=str(e))
         return Success()
 
-class SMTPBasedMessageEngineForTest(SMTPBasedMessageEngine):
 
+class SMTPBasedMessageEngineForTest(SMTPBasedMessageEngine):
     def login(self, smtp):
         pass
 
@@ -63,7 +64,8 @@ class SMTPBasedMessageEngineForTest(SMTPBasedMessageEngine):
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
         return ssl_context
-        
+
+
 def as_smtp_message(message):
     email_message = EmailMessage()
     email_message['To'] = message.recipient

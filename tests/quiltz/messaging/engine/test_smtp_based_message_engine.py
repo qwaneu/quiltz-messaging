@@ -1,4 +1,3 @@
-from re import I
 from testing import *
 from quiltz.testsupport.smtp import StubSmtpServer
 import logging 
@@ -8,6 +7,7 @@ from quiltz.messaging.engine.smtp import SMTPBasedMessageEngine, as_smtp_message
 from quiltz.messaging.messenger import Message, Messenger
 from quiltz.domain.results import Success, Failure
 from quiltz.domain.anonymizer import anonymize
+
 
 class TestSMTPBasedMessageEngine:
     @pytest.fixture(autouse=True)
@@ -24,7 +24,7 @@ class TestSMTPBasedMessageEngine:
         self.server.stop()
 
     def test_sends_message_to_recipient(self):        
-        self.messenger.send(aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message'))
         self.message_engine.commit(self.messenger)
 
         probe_that(lambda: assert_that(self.server.messages, equal_to([
@@ -32,12 +32,12 @@ class TestSMTPBasedMessageEngine:
         ])))
 
     def test_returns_success(self):        
-        self.messenger.send(aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message'))
         assert_that(self.message_engine.commit(self.messenger), equal_to(Success()))
 
     def test_sends_multiple_message_to_recipient(self):        
-        self.messenger.send(aValidMessage(to=ValidRecepient(email="rob@mail.com"), subject="Hi Facilitator", body='My message'))
-        self.messenger.send(aValidMessage(to=ValidRecepient(email="marc@mail.com"), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(email="rob@mail.com"), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(email="marc@mail.com"), subject="Hi Facilitator", body='My message'))
         self.message_engine.commit(self.messenger)
 
         probe_that(lambda: assert_that(self.server.messages, equal_to([
@@ -45,22 +45,22 @@ class TestSMTPBasedMessageEngine:
         ])))
 
     def test_logs_sending(self, log_collector):
-        self.messenger.send(aValidMessage(to=ValidRecepient(email="rob@mail.com"), subject="Hi Facilitator", body='My message'))
-        self.messenger.send(aValidMessage(to=ValidRecepient(email="marc@mail.com"), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(email="rob@mail.com"), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(email="marc@mail.com"), subject="Hi Facilitator", body='My message'))
         self.message_engine.commit(self.messenger)
         log_collector.assert_info('Flushed messages to {}, {}'.format(anonymize("rob@mail.com"), anonymize("marc@mail.com")))
 
     def test_returns_failure_when_message_fails_to_send(self):
         self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace', '554 Transaction failed: Local address contains control or whitespace')
-        message = aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message')
+        message = aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message')
         self.messenger.send(message)
         self.messenger.send(message)
         assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {}, {}'.format(message.recipient, message.recipient))))
 
     def test_returns_failure_when_only_one_message_fails_to_send(self):
         self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace')
-        message1 = aValidMessage(to=ValidRecepient(email="failure@facilitators.com"), subject="Hi Facilitator", body='My message')
-        message2 = aValidMessage(to=ValidRecepient(email="success@facilitators.com"), subject="Hi Facilitator", body='My message')
+        message1 = aValidMessage(to=ValidRecipient(email="failure@facilitators.com"), subject="Hi Facilitator", body='My message')
+        message2 = aValidMessage(to=ValidRecipient(email="success@facilitators.com"), subject="Hi Facilitator", body='My message')
         self.messenger.send(message1)
         self.messenger.send(message2)
         self.messenger.send(message2)
@@ -78,12 +78,13 @@ class TestSMTPBasedMessageEngineThatFailsOnNotBeinAbleToConnectToSMTPServer:
         self.messenger = Messenger(sender='no-reply@messenger.bla', context=None)
 
     def test_returns_success(self):        
-        self.messenger.send(aValidMessage(to=ValidRecepient(), subject="Hi Facilitator", body='My message'))
+        self.messenger.send(aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message'))
         assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='[Errno 111] Connection refused')))
+
 
 class TestSmtpMessageMapping:
     def test_message_contains_to_from_body(self):
-        facilitator = ValidRecepient(email='henk@qwan.eu', name='Henk Wijngaard')
+        facilitator = ValidRecipient(email='henk@qwan.eu', name='Henk Wijngaard')
         message = aValidMessage(to=facilitator, subject="Hi Facilitator", body='My message')
         smtp_message = as_smtp_message(message)
         assert_that(smtp_message['To'], equal_to(message.recipient))
@@ -91,15 +92,18 @@ class TestSmtpMessageMapping:
         assert_that(smtp_message['Subject'], equal_to(message.subject))
         assert_that(smtp_message.as_string().split('\n\n', 1)[1].strip(), equal_to(message.body))
 
+
 def stringified_message(message):
     return '\r\n'.join(as_smtp_message(message).as_string().splitlines())
 
+
 @dataclass
-class ValidRecepient:
+class ValidRecipient:
     name: str = 'F. Facilitator'
     email: str = 'henk@facilitators.com'
 
+
 def aValidMessage(**kwargs):
-    validArgs = dict(to= ValidRecepient(), subject= "Hi There", sender= "af@dop.eu", body= 'Hello Facilitator')
+    validArgs = dict(to= ValidRecipient(), subject="Hi There", sender="af@dop.eu", body='Hello Facilitator')
     return Message.for_named_recipient(**{**validArgs, **kwargs})
 
