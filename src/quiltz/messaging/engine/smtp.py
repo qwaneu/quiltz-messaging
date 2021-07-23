@@ -41,7 +41,10 @@ class SMTPBasedMessageEngine:
                 for message in messenger.messages:
                     try:
                         smtp.send_message(msg=as_smtp_message(message))
-                    except SMTPDataError:
+                    except SMTPDataError as e:
+                        self.logger.warning('Failed sending message to {}: [{}] {}'.format(anonymize(message.to.email),
+                                                                                           e.smtp_code,
+                                                                                           e.smtp_error.decode('utf-8')))
                         failed_messages.append(message)
                 successful_messages = [m for m in messenger.messages if m not in failed_messages]
                 log_message = 'Flushed messages to {}'.format(", ".join([anonymize(m.to.email) for m in successful_messages]))

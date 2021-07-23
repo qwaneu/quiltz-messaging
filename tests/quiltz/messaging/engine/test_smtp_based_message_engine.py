@@ -50,6 +50,12 @@ class TestSMTPBasedMessageEngine:
         self.message_engine.commit(self.messenger)
         log_collector.assert_info('Flushed messages to {}, {}'.format(anonymize("rob@mail.com"), anonymize("marc@mail.com")))
 
+    def test_logs_sending_failure(self, log_collector):
+        self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace')
+        self.messenger.send(aValidMessage(to=ValidRecipient(email="rob@mail.com"), subject="Hi Facilitator", body='My message'))
+        self.message_engine.commit(self.messenger)
+        log_collector.assert_warning('Failed sending message to {}: {}'.format(anonymize("rob@mail.com"), '[554] Transaction failed: Local address contains control or whitespace'))
+
     def test_returns_failure_when_message_fails_to_send(self):
         self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace', '554 Transaction failed: Local address contains control or whitespace')
         message = aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message')
