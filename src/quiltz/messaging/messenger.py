@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List
 
+
 class Recipient:
     def as_string(self):
         return 'unknown'
+
 
 @dataclass
 class NamedRecipient(Recipient):
@@ -20,8 +22,10 @@ class NamedRecipient(Recipient):
 @dataclass
 class UnnamedRecipient(Recipient):
     email: str
+
     def as_string(self):
         return self.email
+
 
 @dataclass
 class Message:
@@ -40,7 +44,8 @@ class Message:
 
     @property
     def recipient(self):
-      return self.to.as_string()
+        return self.to.as_string()
+
 
 @dataclass
 class Messenger:
