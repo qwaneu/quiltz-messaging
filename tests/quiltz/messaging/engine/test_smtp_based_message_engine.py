@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from quiltz.testsupport import probe_that, log_collector
 from quiltz.messaging.engine.smtp import SMTPBasedMessageEngine, as_smtp_message
 from quiltz.messaging.messenger import Message, Messenger
-from quiltz.domain.results import Success, Failure
+from quiltz.domain.results import Success, Failure, PartialSuccess
 from quiltz.domain.anonymizer import anonymize
 
 
@@ -61,7 +61,7 @@ class TestSMTPBasedMessageEngine:
         message = aValidMessage(to=ValidRecipient(), subject="Hi Facilitator", body='My message')
         self.messenger.send(message)
         self.messenger.send(message)
-        assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {}, {}'.format(message.recipient, message.recipient))))
+        assert_that(self.message_engine.commit(self.messenger), equal_to(PartialSuccess(message='Sending messages failed for: {}, {}'.format(message.recipient, message.recipient))))
 
     def test_returns_failure_when_only_one_message_fails_to_send(self):
         self.server.send_message_returns('554 Transaction failed: Local address contains control or whitespace')
@@ -70,7 +70,7 @@ class TestSMTPBasedMessageEngine:
         self.messenger.send(message1)
         self.messenger.send(message2)
         self.messenger.send(message2)
-        assert_that(self.message_engine.commit(self.messenger), equal_to(Failure(message='Sending messages failed for: {} and succeeded for: {}, {}'.format(message1.recipient, message2.recipient, message2.recipient))))
+        assert_that(self.message_engine.commit(self.messenger), equal_to(PartialSuccess(message='Sending messages failed for: {} and succeeded for: {}, {}'.format(message1.recipient, message2.recipient, message2.recipient))))
 
 
 class TestSMTPBasedMessageEngineThatFailsOnNotBeinAbleToConnectToSMTPServer:

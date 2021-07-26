@@ -1,6 +1,6 @@
 from smtplib import SMTP, SMTPDataError
 from email.message import EmailMessage
-from quiltz.domain.results import Success, Failure
+from quiltz.domain.results import Success, Failure, PartialSuccess
 import ssl
 import logging
 
@@ -60,7 +60,7 @@ class SMTPBasedMessageEngine:
         message = 'Sending messages failed for: {}'.format(', '.join([m.recipient for m in failed_messages]))
         if len(successful_messages) != 0:
             message += ' and succeeded for: {}'.format(', '.join([m.recipient for m in successful_messages]))
-        return Failure(message=message)
+        return PartialSuccess(message=message)
 
 
 class SMTPBasedMessageEngineForTest(SMTPBasedMessageEngine):
