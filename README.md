@@ -4,7 +4,7 @@ python (email) messaging package
 
 ## Purpose
 
-At QWAN we're building some applications in python. We collect usefull stuff in
+At QWAN, we're building some applications in python. We collect useful stuff in
 quiltz packages:
 
 * [**quiltz-domain**](https://github.com/qwaneu/quiltz-domain) contains domain
@@ -15,7 +15,7 @@ quiltz packages:
   integrating with smtp, probing asynchronous results and asserting log
   statements
 * **quiltz-messaging** (this package) contains a messaging domain concept and an
-  engine(s) to send the messages. Currently only smtp sending is supported.
+  engine(s) to send the messages. Currently, only smtp sending is supported.
 
 ## installing 
 
