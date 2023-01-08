@@ -100,7 +100,7 @@ class TestSmtpMessageMapping:
 
 
 def stringified_message(message):
-    return '\r\n'.join(as_smtp_message(message).as_string().splitlines())
+    return '\r\n'.join(as_smtp_message(message).as_string().splitlines()) + '\r\n'
 
 
 @dataclass

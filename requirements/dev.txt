@@ -1,5 +1,5 @@
 # development
-pyhamcrest==2.0.2
-pytest==6.1.1
+pyhamcrest==2.0.4
+pytest==7.2.0
 pytest_watch==4.2.0
-quiltz.testsupport==0.2.1
+quiltz.testsupport>=0.3.1
